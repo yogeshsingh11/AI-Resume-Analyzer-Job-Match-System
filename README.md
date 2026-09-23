@@ -1,131 +1,212 @@
-# 📄 AI Resume Analyzer & Job Match System
+# AI Resume Analyzer & Job Match System
 
-A Streamlit web app that analyzes a resume PDF against a job description and
-produces a match score, skill-gap breakdown, strengths/weaknesses,
-improvement suggestions, and tailored interview questions.
+A Streamlit-based application that analyzes a resume PDF against a job description and provides a resume–job match score, skill-gap analysis, strengths and weaknesses, improvement suggestions, and tailored interview questions.
 
-## How it works
+## Features
 
+- Extracts text from resume PDFs using **PyMuPDF**
+- Processes resume and job-description text using **Regex and spaCy**
+- Extracts structured information and relevant skills
+- Generates semantic embeddings using **Sentence Transformers**
+- Calculates resume–job similarity using **cosine similarity**
+- Produces a **match score**
+- Identifies **skill gaps**
+- Uses the **Anthropic Claude API** for qualitative analysis
+- Generates:
+  - Strengths
+  - Weaknesses
+  - Improvement recommendations
+  - Tailored interview questions
+- Provides an interactive **Streamlit dashboard**
+- Can calculate the match score and skill-gap analysis locally without an API key
+
+## How It Works
+
+```text
+Resume PDF ──> PyMuPDF ──> Text
+                              │
+                              ▼
+                    Regex + spaCy Processing
+                              │
+Job Description ──────────────┘
+                              │
+                              ▼
+                  Sentence Transformer
+                    Semantic Embeddings
+                              │
+                              ▼
+                    Cosine Similarity
+                              │
+                              ▼
+                       Match Score
+                              │
+                    ┌─────────┴─────────┐
+                    ▼                   ▼
+              Skill Gap Analysis    Claude LLM
+                                        │
+                                        ▼
+                         Strengths / Weaknesses /
+                         Recommendations /
+                         Interview Questions
+                              │
+                              ▼
+                       Streamlit Dashboard
 ```
-Resume.pdf ─▶ PyMuPDF ─▶ Text ─▶ Regex + spaCy ─▶ structured fields
-                                                        │
-Job Description ─────────────────────▶ Regex + spaCy ──┘
-                                                        │
-                                        Sentence Transformer (embeddings)
-                                                        │
-                                              Cosine Similarity
-                                                        │
-                                                 Match Score (%)
-                                                        │
-                                    ┌───────────────────┴───────────────────┐
-                              Skill Gap Analysis                   LLM Analysis (Claude)
-                                                                     │
-                                                          Strengths / Weaknesses /
-                                                          Recommendations / Interview Qs
-                                                                     │
-                                                          Streamlit Dashboard
-```
 
-## Tech stack
+## Tech Stack
 
-Python · Pandas · NumPy · PyMuPDF · Regex · spaCy · Sentence Transformers ·
-Cosine Similarity · Anthropic Claude API · Prompt Engineering · Streamlit
+| Technology | Purpose |
+|---|---|
+| **Python** | Core programming language |
+| **PyMuPDF** | Resume PDF text extraction |
+| **Regex** | Pattern-based information and skill extraction |
+| **spaCy** | NLP processing |
+| **Sentence Transformers** | Semantic embeddings |
+| **Cosine Similarity** | Resume–job similarity calculation |
+| **Anthropic Claude API** | AI-based qualitative analysis |
+| **Prompt Engineering** | Structuring LLM analysis and outputs |
+| **Streamlit** | Web application interface |
+| **Pandas / NumPy** | Data processing and numerical operations |
 
-## Project structure
+## Project Structure
 
-```
-AI-Resume-Analyzer/
-├── app.py                  # Streamlit UI and orchestration
-├── requirements.txt
-├── README.md
-├── .gitignore
-├── src/
-│   ├── pdf_parser.py        # PyMuPDF text extraction
-│   ├── nlp_processor.py     # Regex + spaCy extraction, skill taxonomy
-│   ├── matcher.py           # Embeddings, cosine similarity, skill gap
-│   └── llm_analyzer.py      # Anthropic API calls + prompt engineering
-└── assets/
-    └── screenshots/
+```text
+AI-Resume-Analyzer-Job-Match-System/
+│
+├── app.py                  # Streamlit UI and application orchestration
+├── requirements.txt        # Python dependencies
+├── README.md               # Project documentation
+├── .gitignore              # Files ignored by Git
+│
+└── src/
+    ├── __init__.py
+    ├── pdf_parser.py       # PDF text extraction using PyMuPDF
+    ├── nlp_processor.py    # Regex + spaCy processing and skill extraction
+    ├── matcher.py          # Embeddings, similarity score and skill-gap analysis
+    └── llm_analyzer.py     # Anthropic API calls and prompt engineering
 ```
 
 ## Setup
 
-1. **Create a virtual environment (recommended):**
+### 1. Clone the repository
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # Windows: venv\Scripts\activate
-   ```
+```bash
+git clone https://github.com/yogeshsingh11/AI-Resume-Analyzer-Job-Match-System.git
+cd AI-Resume-Analyzer-Job-Match-System
+```
 
-2. **Install dependencies:**
+### 2. Create a virtual environment
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+python -m venv venv
+```
 
-3. **Download the spaCy language model** (used for tokenization, lemmatization,
-   and named entity recognition):
+**Windows:**
 
-   ```bash
-   python -m spacy download en_core_web_sm
-   ```
+```bash
+venv\Scripts\activate
+```
 
-4. **Get an Anthropic API key** (used for the qualitative analysis — strengths,
-   weaknesses, recommendations, interview questions):
+**macOS / Linux:**
 
-   - Sign up / log in at [console.anthropic.com](https://console.anthropic.com)
-   - Create an API key
-   - You'll paste this into the app's sidebar at runtime — it is never
-     written to disk. (Alternatively, set it as the `ANTHROPIC_API_KEY`
-     environment variable and adapt `app.py`'s sidebar default if you'd
-     rather not paste it each time.)
+```bash
+source venv/bin/activate
+```
 
-## Running the app
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Download the spaCy language model
+
+The project uses the `en_core_web_sm` model for NLP processing.
+
+```bash
+python -m spacy download en_core_web_sm
+```
+
+### 5. Configure the Anthropic API key
+
+The application uses an Anthropic API key for the qualitative AI analysis.
+
+You can obtain an API key from the Anthropic Console:
+
+https://console.anthropic.com/
+
+Enter the key in the application's sidebar when prompted.
+
+**Do not commit API keys, passwords, or other secrets to GitHub.**
+
+## Running the Application
+
+Start the Streamlit application with:
 
 ```bash
 streamlit run app.py
 ```
 
-Then open the local URL Streamlit prints (typically `http://localhost:8501`).
+Then open the local URL shown by Streamlit, typically:
 
-1. Paste your Anthropic API key into the sidebar.
-2. Upload a resume PDF.
-3. Paste a job description.
+```text
+http://localhost:8501
+```
+
+### Using the Application
+
+1. Enter your Anthropic API key in the sidebar.
+2. Upload your resume as a PDF.
+3. Paste the job description.
 4. Click **Analyze Resume**.
+5. Review the match score, skill gaps, recommendations, and interview questions.
 
-Without an API key, the app still runs end-to-end — the match score and
-skill-gap analysis are computed locally — but strengths/weaknesses,
-recommendations, and interview questions fall back to a minimal
-non-AI summary instead of full LLM output.
+If no API key is provided, the application can still perform the local match-score and skill-gap analysis, while the full LLM-based qualitative analysis is unavailable.
 
-## Notes on the first run
+## First Run Notes
 
-- The Sentence Transformer model (`all-MiniLM-L6-v2`) and the spaCy model
-  download automatically / on first use and are cached locally afterward,
-  so the very first analysis will be slower than subsequent ones.
-- If your resume PDF is a scanned image rather than real text, PyMuPDF
-  won't be able to extract text from it — export a text-based PDF instead
-  (e.g. "Print to PDF" from a Word doc / Google Doc).
+- The Sentence Transformer model (`all-MiniLM-L6-v2`) and spaCy model may download the first time they are used.
+- These models are cached locally, so later runs can be faster.
+- The resume should contain selectable text. If the PDF is only a scanned image, PyMuPDF may not be able to extract its text.
 
-## Extending the project
+## Limitations
 
-Ideas for going further once the base version works end-to-end:
+- Scanned/image-only PDFs may not produce usable text without OCR.
+- The quality of the analysis depends on the quality and completeness of the resume and job description.
+- LLM-generated recommendations depend on the Anthropic API response.
+- The current version is designed for individual resume–job-description analysis rather than managing a large candidate database.
 
-- **FAISS / ChromaDB** — store embeddings for multiple resumes and search
-  across a candidate pool.
-- **SQLite** — persist past analyses, match scores, and job descriptions.
-- **Plotly** — richer dashboards (radar charts, skill-coverage gauges).
-- **LangChain** — only if you outgrow direct API calls; not required here.
+## Future Improvements
 
-## The interview-ready summary
+Possible extensions for future versions include:
 
-If asked "what technologies did you use?":
+- Adding OCR support for scanned resumes
+- Storing previous analyses and match scores
+- Supporting multiple resumes and candidate comparison
+- Adding richer visual dashboards
+- Improving skill extraction with a larger and more domain-specific skill taxonomy
+- Adding a vector database for searching across multiple candidate profiles
 
-> Python, Pandas, NumPy, PyMuPDF, Regex, spaCy, Sentence Transformers,
-> semantic embeddings, cosine similarity, the Anthropic Claude API,
-> prompt engineering, Streamlit, and Git/GitHub.
+## Project Pipeline
 
-Pipeline to memorize:
-
-> PDF → Text Extraction → NLP → Embeddings → Semantic Similarity →
-> Match Score → Skill Gap Analysis → LLM → Recommendations → Streamlit
+```text
+PDF
+  ↓
+Text Extraction
+  ↓
+NLP Processing
+  ↓
+Semantic Embeddings
+  ↓
+Cosine Similarity
+  ↓
+Match Score
+  ↓
+Skill Gap Analysis
+  ↓
+LLM Analysis
+  ↓
+Recommendations & Interview Questions
+  ↓
+Streamlit Dashboard
+```
